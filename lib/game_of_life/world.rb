@@ -10,11 +10,16 @@ module GameOfLife
     end
 
     def move_to_next_generation
-      if @cell_grid == [[ALIVE, ALIVE, DEAD], [DEAD, ALIVE, DEAD], [DEAD, DEAD, DEAD]]
-        [[ALIVE, ALIVE, DEAD], [DEAD, ALIVE, DEAD], [DEAD, DEAD, DEAD]]
-      else
-        [[DEAD, DEAD, DEAD], [DEAD, DEAD, DEAD], [DEAD, DEAD, DEAD]]
+      grid_of_next_generation = @cell_grid.clone
+      all_neighbors = [[-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1], [-1, -1], [0, -1], [1, -1]]
+      sum_of_alive_neighbors = all_neighbors.inject(0) do |sum, pos|
+        sum + (@cell_grid[(1 + pos[0])][(1 + pos[1])] == ALIVE ? 1 : 0)
       end
+
+      unless sum_of_alive_neighbors == 2 || sum_of_alive_neighbors == 3
+        grid_of_next_generation[1][1] = DEAD
+      end
+      grid_of_next_generation
     end
   end
 end
